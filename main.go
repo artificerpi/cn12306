@@ -5,6 +5,8 @@ import(
 	"log"
 	"io/ioutil"
 	"crypto/tls"
+	"encoding/json"
+	"strings"
 )
 
 
@@ -38,10 +40,23 @@ func q(rawurl string){
 	if err!=nil{
 		log.Fatal(err)
 	}
-	log.Println("Data", string(data))
+	// log.Println("Data", string(data))
+
+	var t TicketResponse
+	err = json.Unmarshal(data, &t)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, v := range t.Data.LeftTickets {
+		values := strings.Split(v,"|")
+		log.Println(values)
+	}
 }
 
 func main(){
+	// server health check
 	// q("https://kyfw.12306.cn/otn/leftTicket/log")
+	
 	q("https://kyfw.12306.cn/otn/leftTicket/queryZ")
 }

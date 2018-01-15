@@ -9,10 +9,10 @@ func unsortedEncode(v url.Values) string{
 		return ""
 	}
 	var buf bytes.Buffer
-	keys := make([]string, 0, len(v))
-	for k := range v {
-		keys = append(keys, k)
-	}
+	keys := []string{"leftTicketDTO.train_date",
+		"leftTicketDTO.from_station",
+		"leftTicketDTO.to_station",
+		"purpose_codes"}
 
 	for _, k := range keys {
 		vs := v[k]
