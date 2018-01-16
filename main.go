@@ -7,6 +7,7 @@ import(
 	"crypto/tls"
 	"encoding/json"
 	"strings"
+	"fmt"
 )
 
 
@@ -49,9 +50,37 @@ func q(rawurl string){
 	}
 
 	for _, v := range t.Data.LeftTickets {
+		v = strings.TrimPrefix(v,"|")
 		values := strings.Split(v,"|")
-		log.Println(values)
+		printValues(values)
 	}
+}
+
+func printValues(values []string){
+	if len(values) != 36 {
+		return
+	}
+	
+	ticket := LeftTicket{
+		StationTrainCode: values[2],
+		FromStation: values[5],
+		ToStation: values[6],
+		StartTime: values[7],
+		ArriveTime: values[8],
+		BusinessSeat: values[31],
+		FirstClassSeat: values[30],
+		SecondClassSeat: values[29],
+		AdvancedSleeper: values[20],
+		SoftSleeper: values[22],
+		HardSleeper: values[27],
+		HardSeat: values[28],
+		StandUp: values[25],
+		Other: values[32],
+		Remark: values[0],
+	}
+
+	fmt.Println(ticket.StationTrainCode, ticket.FromStation, ticket.ToStation,ticket.StartTime, ticket.ArriveTime, ticket.BusinessSeat, ticket.FirstClassSeat, ticket.SecondClassSeat,
+	ticket.AdvancedSleeper, ticket.SoftSleeper, ticket.HardSleeper, ticket.HardSeat, ticket.StandUp, ticket.Other, ticket.Remark)
 }
 
 func main(){

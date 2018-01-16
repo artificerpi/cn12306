@@ -14,21 +14,19 @@ type Payload struct{
 }
 
 type LeftTicket struct{
-	TrainNo string
-	FromStation string
-	ToStation string
-	StartTime string
-	ArriveTime string
-	BusinessSeat int
-	FirstClassSeat int
-	SecondClassSeat int
-	AdvancedSleeper int
-	SoftSleeper int
-	FastSleeper int
-	HardSleeper int
-	SoftSeat int
-	HardSeat int
-	StandUp int
-	Other int
-	Remark string
+	StationTrainCode string  
+	FromStation string     
+	ToStation string  
+	StartTime string  
+	ArriveTime string  
+	BusinessSeat string 
+	FirstClassSeat string 
+	SecondClassSeat string 
+	AdvancedSleeper string 
+	SoftSleeper string 
+	HardSleeper string  
+	HardSeat string 
+	StandUp string 
+	Other string  
+	Remark string 
 }
