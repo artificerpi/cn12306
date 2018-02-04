@@ -1,24 +1,32 @@
 package main
 
 import (
-	"fmt"
-
 	ui "github.com/gizak/termui"
+)
+
+// TODO should be set property
+type TicketRow [3]string
+
+var (
+	table *ui.Table
 )
 
 // terminal UI
 func startUI() {
-	results := q(queryURL)
-	// fmt.Println("length", len(results))
-
-	rows := parseResult(results)
-
 	if err := ui.Init(); err != nil {
 		panic(err)
 	}
 	defer ui.Close()
 
-	table := ui.NewTable()
+	resetUI()
+	registerEvent()
+	ui.Loop()
+}
+
+func resetUI() {
+	table = ui.NewTable()
+	results := q(queryURL)
+	rows := parseResult(results)
 	table.Rows = rows
 	table.X = 0
 	table.Y = 0
@@ -30,28 +38,25 @@ func startUI() {
 			ui.NewCol(12, 0, table),
 		),
 	)
-	fmt.Println("finished!")
-	// calculate layout
-	ui.Body.Align()
 
+	// Initial Display
+	ui.Body.Align()
 	ui.Clear()
 	ui.Render(ui.Body)
+}
 
+func registerEvent() {
 	ui.Handle("/sys/kbd/q", func(ui.Event) {
 		ui.StopLoop()
 	})
-	ui.Handle("/timer/5s", func(e ui.Event) {
-		// t := e.Data.(ui.EvtTimer)
-		// i := t.Count
-		// if i > 103 {
-		// 	ui.StopLoop()
-		// 	return
-		// }
-
-		ui.Clear()
-		ui.Body.Rows = nil
+	ui.Handle("/timer/1s", func(e ui.Event) {
+		results := q(queryURL)
+		rows := parseResult(results)
+		table.Rows = rows
 		ui.Render(ui.Body)
 	})
+
+	// TODO add update event
 
 	ui.Handle("/sys/wnd/resize", func(e ui.Event) {
 		ui.Body.Width = ui.TermWidth()
@@ -59,6 +64,4 @@ func startUI() {
 		ui.Clear()
 		ui.Render(ui.Body)
 	})
-
-	ui.Loop()
 }

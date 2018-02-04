@@ -2,7 +2,7 @@
 
 
 ## TODO
--[x] Auto Query 
+-[] Auto Query  -- doing
 - Configurable
 - Notification
 - Generate QR-Code with query string

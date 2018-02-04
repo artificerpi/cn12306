@@ -4,18 +4,24 @@ import (
 	"crypto/tls"
 	"log"
 	"net/http"
-	"time"
 )
 
-func q(rawurl string) [][]string {
+var (
+	client *http.Client
+	// cache  Cache
+)
+
+func init() {
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
-	client := &http.Client{
+	client = &http.Client{
 		Transport: tr,
-		Timeout:   3 * time.Second,
+		// Timeout:   10 * time.Second,
 	}
+}
 
+func q(rawurl string) [][]string {
 	req, err := http.NewRequest("GET", rawurl, nil)
 	if err != nil {
 		log.Fatal(err)
@@ -30,7 +36,8 @@ func q(rawurl string) [][]string {
 
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		// client.Timeout += 3 * time.Second
 	}
 	defer resp.Body.Close()
 

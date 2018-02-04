@@ -38,14 +38,14 @@ func unsortedEncode(v url.Values) string {
 func readData(r io.Reader) [][]string {
 	data, err := ioutil.ReadAll(r)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	// log.Println("Data", string(data))
 
 	var t TicketResponse
 	err = json.Unmarshal(data, &t)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 
 	results := make([][]string, 30)
@@ -66,7 +66,7 @@ func printValues(values []string) {
 		return
 	}
 
-	ticket := LeftTicket{
+	ticket := TicketInfo{
 		StationTrainCode: values[2],
 		FromStation:      values[5],
 		ToStation:        values[6],
@@ -101,7 +101,7 @@ func parseResult(results [][]string) [][]string {
 		// length 36
 		// fmt.Println(v)
 
-		ticket := LeftTicket{
+		ticket := TicketInfo{
 			StationTrainCode: v[2],
 			FromStation:      v[5],
 			ToStation:        v[6],
