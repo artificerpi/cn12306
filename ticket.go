@@ -2,19 +2,6 @@ package main
 
 type TicketData []string
 
-type TicketResponse struct {
-	Data       Payload     `json:"data"`
-	HttpStatus int         `json:"httpstatus"`
-	Messages   interface{} `json:"messages"`
-	StatusOK   bool        `json:"status"`
-}
-
-type Payload struct {
-	Flag        string      `json:"flag"`
-	Map         interface{} `json:"map"`
-	LeftTickets []string    `json:"result"`
-}
-
 type TicketInfo struct {
 	StationTrainCode string
 	FromStation      string

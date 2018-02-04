@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/artificerpi/cn12306/query"
 	ui "github.com/gizak/termui"
 )
 
@@ -25,7 +26,7 @@ func startUI() {
 
 func resetUI() {
 	table = ui.NewTable()
-	results := q(queryURL)
+	results := query.Q(queryURL)
 	rows := parseResult(results)
 	table.Rows = rows
 	table.X = 0
@@ -50,7 +51,7 @@ func registerEvent() {
 		ui.StopLoop()
 	})
 	ui.Handle("/timer/1s", func(e ui.Event) {
-		results := q(queryURL)
+		results := query.Q(queryURL)
 		rows := parseResult(results)
 		table.Rows = rows
 		ui.Render(ui.Body)

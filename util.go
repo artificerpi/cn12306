@@ -1,65 +1,8 @@
 package main
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
-	"io"
-	"io/ioutil"
-	"log"
-	"net/url"
-	"strings"
 )
-
-func unsortedEncode(v url.Values) string {
-	if v == nil {
-		return ""
-	}
-	var buf bytes.Buffer
-	keys := []string{"leftTicketDTO.train_date",
-		"leftTicketDTO.from_station",
-		"leftTicketDTO.to_station",
-		"purpose_codes"}
-
-	for _, k := range keys {
-		vs := v[k]
-		prefix := url.QueryEscape(k) + "="
-		for _, v := range vs {
-			if buf.Len() > 0 {
-				buf.WriteByte('&')
-			}
-			buf.WriteString(prefix)
-			buf.WriteString(url.QueryEscape(v))
-		}
-	}
-	return buf.String()
-}
-
-func readData(r io.Reader) [][]string {
-	data, err := ioutil.ReadAll(r)
-	if err != nil {
-		log.Println(err)
-	}
-	// log.Println("Data", string(data))
-
-	var t TicketResponse
-	err = json.Unmarshal(data, &t)
-	if err != nil {
-		log.Println(err)
-	}
-
-	results := make([][]string, 30)
-	for _, v := range t.Data.LeftTickets {
-		v = strings.TrimPrefix(v, "|")
-		values := strings.Split(v, "|")
-		// filter
-		if strings.HasPrefix(values[2], "G") {
-			results = append(results, values)
-		}
-	}
-
-	return results
-}
 
 func printValues(values []string) {
 	if len(values) != 36 {

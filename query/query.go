@@ -1,9 +1,13 @@
-package main
+package query
 
 import (
 	"crypto/tls"
+	"encoding/json"
+	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 )
 
 var (
@@ -21,7 +25,20 @@ func init() {
 	}
 }
 
-func q(rawurl string) [][]string {
+type TicketResponse struct {
+	Data       Payload     `json:"data"`
+	HttpStatus int         `json:"httpstatus"`
+	Messages   interface{} `json:"messages"`
+	StatusOK   bool        `json:"status"`
+}
+
+type Payload struct {
+	Flag        string      `json:"flag"`
+	Map         interface{} `json:"map"`
+	LeftTickets []string    `json:"result"`
+}
+
+func Q(rawurl string) [][]string {
 	req, err := http.NewRequest("GET", rawurl, nil)
 	if err != nil {
 		log.Fatal(err)
@@ -42,6 +59,32 @@ func q(rawurl string) [][]string {
 	defer resp.Body.Close()
 
 	return readData(resp.Body)
+}
+
+func readData(r io.Reader) [][]string {
+	data, err := ioutil.ReadAll(r)
+	if err != nil {
+		log.Println(err)
+	}
+	// log.Println("Data", string(data))
+
+	var t TicketResponse
+	err = json.Unmarshal(data, &t)
+	if err != nil {
+		log.Println(err)
+	}
+
+	results := make([][]string, 30)
+	for _, v := range t.Data.LeftTickets {
+		v = strings.TrimPrefix(v, "|")
+		values := strings.Split(v, "|")
+		// filter
+		if strings.HasPrefix(values[2], "G") {
+			results = append(results, values)
+		}
+	}
+
+	return results
 }
 
 // // Query store the query string parameters
