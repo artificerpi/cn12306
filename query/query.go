@@ -38,7 +38,7 @@ type Payload struct {
 	LeftTickets []string    `json:"result"`
 }
 
-func Q(rawurl string) [][]string {
+func Q(rawurl string) []TicketData {
 	req, err := http.NewRequest("GET", rawurl, nil)
 	if err != nil {
 		log.Fatal(err)
@@ -61,7 +61,7 @@ func Q(rawurl string) [][]string {
 	return readData(resp.Body)
 }
 
-func readData(r io.Reader) [][]string {
+func readData(r io.Reader) []TicketData {
 	data, err := ioutil.ReadAll(r)
 	if err != nil {
 		log.Println(err)
@@ -74,7 +74,7 @@ func readData(r io.Reader) [][]string {
 		log.Println(err)
 	}
 
-	results := make([][]string, 30)
+	results := make([]TicketData, 30)
 	for _, v := range t.Data.LeftTickets {
 		v = strings.TrimPrefix(v, "|")
 		values := strings.Split(v, "|")

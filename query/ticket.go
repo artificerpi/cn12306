@@ -1,6 +1,22 @@
-package main
+package query
+
+import "time"
 
 type TicketData []string
+
+type TicketResult struct {
+	TicketList []TicketData
+	QueryTime  time.Time
+}
+
+func (d *TicketResult) RawData() [][]string {
+	list := make([][]string, len(d.TicketList))
+	for _, e := range d.TicketList {
+		list = append(list, e)
+	}
+
+	return list
+}
 
 type TicketInfo struct {
 	StationTrainCode string

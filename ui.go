@@ -9,6 +9,8 @@ type TicketRow [3]string
 
 var (
 	table *ui.Table
+	rows  [][]string = make([][]string, 1000)
+	index int
 )
 
 // terminal UI
@@ -25,7 +27,8 @@ func startUI() {
 
 func resetUI() {
 	table = ui.NewTable()
-	table.Rows = getRows()
+	rows := getRows()
+	table.Rows = rows
 	table.X = 0
 	table.Y = 0
 	table.Width = 1
@@ -64,16 +67,47 @@ func registerEvent() {
 		ui.StopLoop()
 	})
 
-	ui.Handle("/sys/kbd/j", func(ui.Event) {
+	ui.Handle("/sys/kbd/r", func(ui.Event) {
+		rows = getRows()
+		if len(rows) == 0 {
+			return
+		}
+		index = 0
+		end := index + 12
+		if len(rows) < 12 {
+			end = len(rows) - 1
+		}
+		table.Rows = rows[index:end]
+		ui.Render(ui.Body)
+	})
 
+	ui.Handle("/sys/kbd/j", func(ui.Event) {
+		if index+12 < len(rows) {
+			index++
+		}
+		end := index + 12
+		if len(rows) < 12 {
+			end = len(rows) - 1
+		}
+		table.Rows = rows[index:end]
+		ui.Render(ui.Body)
 	})
 
 	ui.Handle("/sys/kbd/k", func(ui.Event) {
+		if index > 1 {
+			index--
+		}
+		end := index + 12
+		if len(rows) < 12 {
+			end = len(rows) - 1
+		}
+		table.Rows = rows[index:end]
+		ui.Render(ui.Body)
 	})
 
 	ui.Handle("/timer/1s", func(e ui.Event) {
-		table.Rows = getRows()
-		ui.Render(ui.Body)
+		// table.Rows = getRows()
+		// ui.Render(ui.Body)
 	})
 
 	ui.Handle("/sys/wnd/resize", func(e ui.Event) {
