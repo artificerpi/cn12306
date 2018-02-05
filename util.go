@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+
+	"github.com/artificerpi/cn12306/query"
 )
 
 func printValues(values []string) {
@@ -9,7 +11,7 @@ func printValues(values []string) {
 		return
 	}
 
-	ticket := TicketInfo{
+	ticket := query.TicketInfo{
 		StationTrainCode: values[2],
 		FromStation:      values[5],
 		ToStation:        values[6],
@@ -44,7 +46,7 @@ func parseResult(results [][]string) [][]string {
 		// length 36
 		// fmt.Println(v)
 
-		ticket := TicketInfo{
+		ticket := query.TicketInfo{
 			StationTrainCode: v[2],
 			FromStation:      v[5],
 			ToStation:        v[6],
