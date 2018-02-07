@@ -8,9 +8,9 @@ import (
 type TicketRow [3]string
 
 var (
-	table *ui.Table
-	rows  [][]string = make([][]string, 1000)
-	index int
+	trBody *ui.Table
+	rows   [][]string = make([][]string, 1000)
+	index  int
 )
 
 // terminal UI
@@ -26,14 +26,21 @@ func startUI() {
 }
 
 func resetUI() {
-	table = ui.NewTable()
+	trHead := ui.NewTable()
+	trHead.Rows = [][]string{
+		[]string{"车次", "起始", "--->", "终止", "发车时间", "--", "到达时间", "历时", "座位信息", "", "", ""},
+	}
+	trHead.X = 0
+	trHead.Y = 0
+	trHead.BorderLabel = "CN12306"
+
+	trBody = ui.NewTable()
 	rows := getRows()
-	table.Rows = rows
-	table.X = 0
-	table.Y = 0
-	table.Width = 1
-	table.Height = 36
-	table.BorderLabel = "CN12306"
+	trBody.Rows = rows
+	trBody.X = 0
+	trBody.Y = 0
+	trBody.Width = 1
+	trBody.Height = 36
 
 	par := ui.NewPar("退出:Q		刷新:R	上:K		下:J")
 	par.Height = 3
@@ -43,7 +50,10 @@ func resetUI() {
 
 	ui.Body.AddRows(
 		ui.NewRow(
-			ui.NewCol(12, 0, table),
+			ui.NewCol(12, 0, trHead),
+		),
+		ui.NewRow(
+			ui.NewCol(12, 0, trBody),
 		),
 		ui.NewRow(
 			ui.NewCol(12, 0, par),
@@ -77,10 +87,16 @@ func registerEvent() {
 		if len(rows) < 12 {
 			end = len(rows) - 1
 		}
-		table.Rows = rows[index:end]
+		trBody.Rows = rows[index:end]
 		ui.Render(ui.Body)
 	})
 
+	// prev page
+	ui.Handle("/sys/kbd/h", func(ui.Event) {
+
+	})
+
+	// scroll down
 	ui.Handle("/sys/kbd/j", func(ui.Event) {
 		if index+12 < len(rows) {
 			index++
@@ -89,10 +105,11 @@ func registerEvent() {
 		if len(rows) < 12 {
 			end = len(rows) - 1
 		}
-		table.Rows = rows[index:end]
+		trBody.Rows = rows[index:end]
 		ui.Render(ui.Body)
 	})
 
+	// scroll up
 	ui.Handle("/sys/kbd/k", func(ui.Event) {
 		if index > 1 {
 			index--
@@ -101,8 +118,23 @@ func registerEvent() {
 		if len(rows) < 12 {
 			end = len(rows) - 1
 		}
-		table.Rows = rows[index:end]
+		trBody.Rows = rows[index:end]
 		ui.Render(ui.Body)
+	})
+
+	// next page page
+	ui.Handle("/sys/kbd/l", func(ui.Event) {
+
+	})
+
+	// gg jumps to start
+	ui.Handle("/sys/kbd/g", func(e ui.Event) {
+
+	})
+
+	// GG jumps to end
+	ui.Handle("/sys/kbd/G", func(e ui.Event) {
+
 	})
 
 	ui.Handle("/timer/1s", func(e ui.Event) {

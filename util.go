@@ -35,8 +35,6 @@ func printValues(values []string) {
 
 func parseResult(results [][]string) [][]string {
 	rows := make([][]string, 0)
-	header := []string{"车次", "起始", "--->", "终止", "发车时间", "--", "到达时间", "历时", "座位信息", "", "", ""}
-	rows = append(rows, header)
 
 	for _, v := range results {
 
