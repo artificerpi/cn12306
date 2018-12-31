@@ -3,15 +3,16 @@ package main
 import (
 	"fmt"
 
-	"github.com/artificerpi/cn12306/query"
+	"github.com/artificerpi/cn12306/api"
 )
 
+// TODO consider replace it with template
 func printValues(values []string) {
 	if len(values) != 36 {
 		return
 	}
 
-	ticket := query.TicketInfo{
+	ticket := api.TicketInfo{
 		StationTrainCode: values[2],
 		FromStation:      values[5],
 		ToStation:        values[6],
@@ -44,7 +45,7 @@ func parseResult(results [][]string) [][]string {
 		// length 36
 		// fmt.Println(v)
 
-		ticket := query.TicketInfo{
+		ticket := api.TicketInfo{
 			StationTrainCode: v[2],
 			FromStation:      v[5],
 			ToStation:        v[6],

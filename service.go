@@ -4,7 +4,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/artificerpi/cn12306/query"
+	"github.com/artificerpi/cn12306/api"
 )
 
 const (
@@ -22,19 +22,20 @@ func init() {
 }
 
 func pollTickets() {
-	ticker := time.NewTicker(10 * time.Second)
+	ticker := time.NewTicker(5 * time.Second)
 
 	for {
 		select {
 		case <-ticker.C:
-			log.Println("ticked")
-			results := query.Q(queryURL)
-			result := query.TicketResult{
-				TicketList: results,
-			}
+			q := api.TicketQuery{
+				LeftTicketDTO: api.LeftTicketDTO{TrainDate: "2019-01-29", FromStation: "IZQ", ToStation: "WHN"},
+				PassengerCode: "ADULT"}
+			results := api.RequestTicketInfo(q)
+			result := api.TicketResult{TicketList: results}
 			p := Data(result)
 			cache.Store(TicketKey, &p)
-			log.Println("Updated cache")
+
+			log.Println("Updating")
 			// case <-p.exit:
 			// 	ticker.Stop()
 
@@ -46,7 +47,7 @@ func getRows() (rows [][]string) {
 	d, ok := cache.Load(TicketKey)
 	o := *d
 	if ok {
-		p := o.(query.TicketResult)
+		p := o.(api.TicketResult)
 		rows = parseResult(p.RawData())
 	}
 

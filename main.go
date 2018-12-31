@@ -5,10 +5,6 @@ import (
 	"os"
 )
 
-const (
-	queryURL string = "https://kyfw.12306.cn/otn/leftTicket/queryZ"
-)
-
 func init() {
 	f, err := os.OpenFile("cn12306.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
