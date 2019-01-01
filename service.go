@@ -45,9 +45,8 @@ func pollTickets() {
 
 func getRows() (rows [][]string) {
 	d, ok := cache.Load(TicketKey)
-	o := *d
 	if ok {
-		p := o.(api.TicketResult)
+		p := (*d).(api.TicketResult)
 		rows = parseResult(p.RawData())
 	}
 
